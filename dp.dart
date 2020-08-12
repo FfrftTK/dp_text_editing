@@ -1,4 +1,5 @@
 import 'dart:math';
+
 import 'package:meta/meta.dart';
 void main() {
   // example
@@ -17,6 +18,7 @@ void main() {
   final res = costTable.fold('', (v1, e1) => '$v1\n${e1.fold('', (v2, e2) => '$v2 $e2')}');
   print('res: ${res}');
 }
+
 class EditController {
   EditController({
     this.input = '', 
@@ -26,22 +28,27 @@ class EditController {
     @required this.deleteCost,
     @required this.replaceCost,
     }){
+      input = ' $input';
+      target = ' $target';
       this._initCostTable();
     }
-  final String input;
-  final String target;
+
+  String input;
+  String target;
   final num initialCost;
   final num Function(String) insertCost;
   final num Function(String) deleteCost;
   final num Function(String, String) replaceCost;
   List<List<num>> _costTable = [[]];
   List<List<num>> getCostTable() => _costTable;
+
   void _initCostTable(){
     final inputCharacters = _splitTextToCharacters(input);
     final targetCharacters = _splitTextToCharacters(target);
     _costTable = inputCharacters.map((_) => 
       targetCharacters.map((_) => initialCost).toList()).toList();
   }
+  
   List<List<num>> getCostTableAfterCalc(){
     _calcCost(
       input.length-1, 
@@ -52,9 +59,11 @@ class EditController {
       );
     return _costTable;
   }
+
   void calcEditingCost({Function(int idxInput, int idxTarget, num res) onCalc}){
     _calcCost(input.length-1, target.length-1, onCalc ?? (x, y, z) => {});
   }
+
   num _calcCost(
     int idxInput, 
     int idxTarget, 
@@ -77,6 +86,7 @@ class EditController {
     onCalc(idxInput, idxTarget, res);
     return res;
   }
+
   List<String> _splitTextToCharacters(String text){
     return text.split('');
   }
